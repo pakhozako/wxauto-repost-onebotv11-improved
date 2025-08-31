@@ -344,6 +344,7 @@ function updateStatusPage(status) {
         onebotConnected.style.color = status.onebot.connected ? '#48bb78' : '#f56565';
     }
     
+    // fix
     if (onebotUrl) {
         onebotUrl.textContent = status.onebot.ws_url || '未配置';
     }
