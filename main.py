@@ -231,7 +231,7 @@ class WxAutoOneBotApp:
 
 # AstrBot插件类
 if ASTRBOT_AVAILABLE:
-    @register("wxauto_repost", "AstrBot Team", "微信消息转发框架插件 - 基于wxauto库和OneBotV11协议", "1.1.0", "https://github.com/luosheng520qaq/wxauto-repost-onebotv11")
+    @register("wxauto_repost", "汐灿", "微信消息转发框架插件 - 基于wxauto库和OneBotV11协议", "1.2.0", "https://github.com/luosheng520qaq/wxauto-repost-onebotv11")
     class WxAutoRepostPlugin(Star):
         """微信消息转发框架AstrBot插件"""
         
