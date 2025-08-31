@@ -54,7 +54,12 @@ class ConfigManager:
                 "enabled": False,
                 "monitor_users": [],  # 监听的用户昵称列表
                 "check_interval": 1.0,  # 检查消息间隔(秒)
-                "auto_reply": False  # 是否自动回复
+                "auto_reply": False,  # 是否自动回复
+                "window_minimize": {
+                    "enabled": False,  # 是否启用定时最小化
+                    "interval": 3600,  # 定时间隔(秒)，默认1小时
+                    "restore_delay": 1  # 恢复延迟(秒)，最小化后多久恢复
+                }
             },
             "onebot": {
                 "enabled": False,

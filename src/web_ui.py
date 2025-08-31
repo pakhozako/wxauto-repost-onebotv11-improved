@@ -15,7 +15,7 @@ import os
 class WebUI:
     """Web用户界面"""
     
-    def __init__(self, config_manager, wechat_monitor=None, onebot_client=None, websocket_client=None, message_handler=None):
+    def __init__(self, config_manager, wechat_monitor=None, onebot_client=None, websocket_client=None, message_handler=None, window_controller=None):
         """初始化WebUI
         
         Args:
@@ -24,12 +24,14 @@ class WebUI:
             onebot_client: OneBot客户端
             websocket_client: WebSocket客户端
             message_handler: 消息处理器
+            window_controller: 窗口控制器
         """
         self.config_manager = config_manager
         self.wechat_monitor = wechat_monitor
         self.onebot_client = onebot_client
         self.websocket_client = websocket_client
         self.message_handler = message_handler
+        self.window_controller = window_controller
         
         # 创建Flask应用
         self.app = Flask(__name__, 
@@ -261,6 +263,18 @@ class WebUI:
                     'webui': {
                         'running': self.running,
                         'port': self.config_manager.get('webui.port', 10001)
+                    },
+                    'window_controller': self.window_controller.get_status() if self.window_controller else {
+                        'enabled': self.config_manager.get('wechat.window_minimize.enabled', False),
+                        'running': False,
+                        'wechat_window_found': False,
+                        'wechat_windows_count': 0,
+                        'wechat_windows': [],
+                        'config': {
+                            'enabled': self.config_manager.get('wechat.window_minimize.enabled', False),
+                            'interval': self.config_manager.get('wechat.window_minimize.interval', 3600),
+                            'restore_delay': self.config_manager.get('wechat.window_minimize.restore_delay', 1)
+                        }
                     }
                 }
                 
@@ -269,6 +283,35 @@ class WebUI:
                     'data': status
                 })
                 
+            except Exception as e:
+                return jsonify({
+                    'success': False,
+                    'error': str(e)
+                }), 500
+                
+        @self.app.route('/api/window/test-minimize', methods=['POST'])
+        def test_minimize():
+            """测试窗口最小化功能"""
+            try:
+                if not self.window_controller:
+                    return jsonify({
+                        'success': False,
+                        'error': '窗口控制器未初始化'
+                    }), 500
+                    
+                success = self.window_controller.minimize_and_restore()
+                
+                if success:
+                    return jsonify({
+                        'success': True,
+                        'message': '测试最小化操作已执行'
+                    })
+                else:
+                    return jsonify({
+                        'success': False,
+                        'error': '未找到微信窗口或操作失败'
+                    }), 500
+                    
             except Exception as e:
                 return jsonify({
                     'success': False,

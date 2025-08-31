@@ -1,0 +1,184 @@
+2025-08-31 21:42:51 [wxauto] [DEBUG] [wx.py:31]  开始监听
+2025-08-31 21:42:51 [werkzeug] [INFO] [_internal.py:97]  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10001
+ * Running on http://192.168.2.8:10001
+2025-08-31 21:42:51 [werkzeug] [INFO] [_internal.py:97]  [33mPress CTRL+C to quit[0m
+2025-08-31 21:42:51 [wxauto] [DEBUG] [sessionbox.py:68]  切换聊天窗口: 汐灿, False, False, 0.5
+2025-08-31 21:42:53 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:53] "GET /?ide_webview_request_time=1756647672883 HTTP/1.1" 200 -
+2025-08-31 21:42:53 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:53] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-08-31 21:42:53 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:53] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-08-31 21:42:55 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:55] "GET /api/config HTTP/1.1" 200 -
+2025-08-31 21:42:55 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:55] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:42:55 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:55] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:42:57 [wxauto] [DEBUG] [sessionbox.py:152]  打开独立窗口: 汐灿
+2025-08-31 21:42:58 [wxauto] [DEBUG] [sessionbox.py:166]  未找到会话: 汐灿
+2025-08-31 21:42:58 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:58] "POST /api/control/wechat/stop HTTP/1.1" 200 -
+2025-08-31 21:42:59 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:42:59] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:00 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:00] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:01 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:01] "POST /api/control/onebot/stop HTTP/1.1" 200 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "GET /?ide_webview_request_time=1756647785058 HTTP/1.1" 200 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "GET /api/config HTTP/1.1" 200 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:43:05 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:05] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:08 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:08] "[33mGET /@vite/client HTTP/1.1[0m" 404 -
+2025-08-31 21:43:10 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:10] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:15 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:15] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:20 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:20] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:20 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:20] "[31m[1mPOST /api/control/window/start HTTP/1.1[0m" 400 -
+2025-08-31 21:43:21 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:21] "[31m[1mPOST /api/control/window/stop HTTP/1.1[0m" 400 -
+2025-08-31 21:43:25 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:25] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:30 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:30] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:35 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:35] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:40 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:40] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:45 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:45] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:50 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:50] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:55 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:55] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "GET /?ide_webview_request_time=1756647837809 HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "GET /api/config HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:43:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:43:57] "[33mGET /@vite/client HTTP/1.1[0m" 404 -
+2025-08-31 21:44:02 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:02] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:07 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:07] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:12 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:12] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:17 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:17] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:22 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:22] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:27 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:27] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:32 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:32] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:37 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:37] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:42 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:42] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:47 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:47] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:52 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:52] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:44:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:44:57] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:02 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:02] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:07 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:07] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:12 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:12] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:17 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:17] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:22 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:22] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:27 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:27] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:28 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:28] "POST /api/config/validate HTTP/1.1" 200 -
+2025-08-31 21:45:32 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:32] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:36 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:36] "POST /api/config/validate HTTP/1.1" 200 -
+2025-08-31 21:45:36 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:36] "POST /api/config HTTP/1.1" 200 -
+2025-08-31 21:45:37 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:37] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:39 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:39] "[35m[1mPOST /api/window/test-minimize HTTP/1.1[0m" 500 -
+2025-08-31 21:45:42 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:42] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:47 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:47] "[35m[1mPOST /api/window/test-minimize HTTP/1.1[0m" 500 -
+2025-08-31 21:45:47 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:47] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:52 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:52] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:45:53 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:53] "[31m[1mPOST /api/control/window/start HTTP/1.1[0m" 400 -
+2025-08-31 21:45:57 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:45:57] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:02 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:02] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:07 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:07] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "GET /?ide_webview_request_time=1756647969657 HTTP/1.1" 200 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "GET /api/config HTTP/1.1" 200 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:09] "[33mGET /@vite/client HTTP/1.1[0m" 404 -
+2025-08-31 21:46:14 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:14] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:16 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:16] "[35m[1mPOST /api/window/test-minimize HTTP/1.1[0m" 500 -
+2025-08-31 21:46:19 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:19] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:25 [wxauto] [DEBUG] [wx.py:31]  开始监听
+2025-08-31 21:46:25 [werkzeug] [INFO] [_internal.py:97]  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10001
+ * Running on http://192.168.2.8:10001
+2025-08-31 21:46:25 [werkzeug] [INFO] [_internal.py:97]  [33mPress CTRL+C to quit[0m
+2025-08-31 21:46:25 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:25] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:26 [wxauto] [DEBUG] [sessionbox.py:68]  切换聊天窗口: 汐灿, False, False, 0.5
+2025-08-31 21:46:27 [websocket] [ERROR] [_logging.py:77]  [WinError 10061] 由于目标计算机积极拒绝，无法连接。 - goodbye
+2025-08-31 21:46:29 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:29] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:31 [wxauto] [DEBUG] [sessionbox.py:152]  打开独立窗口: 汐灿
+2025-08-31 21:46:32 [wxauto] [DEBUG] [sessionbox.py:166]  未找到会话: 汐灿
+2025-08-31 21:46:32 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:32] "POST /api/control/wechat/stop HTTP/1.1" 200 -
+2025-08-31 21:46:33 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:33] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:34 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:34] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:35 [websocket] [ERROR] [_logging.py:77]  [WinError 10061] 由于目标计算机积极拒绝，无法连接。 - goodbye
+2025-08-31 21:46:39 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:39] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:39 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:39] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:46:40 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:40] "POST /api/control/onebot/stop HTTP/1.1" 200 -
+2025-08-31 21:46:44 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:44] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:45 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:45] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:46:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:49] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:54 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:54] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:46:59 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:46:59] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:04 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:04] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:09] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:14 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:14] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:19 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:19] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:24 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:24] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:29 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:29] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:34 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:34] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:39 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:39] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:41 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:41] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:47:43 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:43] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:47:44 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:44] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:49] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:47:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:49] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:54 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:54] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:47:58 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:58] "POST /api/window/test-minimize HTTP/1.1" 200 -
+2025-08-31 21:47:59 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:47:59] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:49:41 [wxauto] [DEBUG] [wx.py:31]  开始监听
+2025-08-31 21:49:42 [werkzeug] [INFO] [_internal.py:97]  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10001
+ * Running on http://192.168.2.8:10001
+2025-08-31 21:49:42 [werkzeug] [INFO] [_internal.py:97]  [33mPress CTRL+C to quit[0m
+2025-08-31 21:49:42 [wxauto] [DEBUG] [sessionbox.py:68]  切换聊天窗口: 汐灿, False, False, 0.5
+2025-08-31 21:49:43 [websocket] [ERROR] [_logging.py:77]  [WinError 10061] 由于目标计算机积极拒绝，无法连接。 - goodbye
+2025-08-31 21:49:48 [wxauto] [DEBUG] [sessionbox.py:152]  打开独立窗口: 汐灿
+2025-08-31 21:49:48 [wxauto] [DEBUG] [sessionbox.py:166]  未找到会话: 汐灿
+2025-08-31 21:49:48 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:48] "GET /?ide_webview_request_time=1756647969657 HTTP/1.1" 200 -
+2025-08-31 21:49:48 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:48] "GET /?ide_webview_request_time=1756647969657 HTTP/1.1" 200 -
+2025-08-31 21:49:48 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:48] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-08-31 21:49:48 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:48] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-08-31 21:49:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:49] "GET /api/config HTTP/1.1" 200 -
+2025-08-31 21:49:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:49] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:49:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:49] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:49:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:49] "[33mGET /@vite/client HTTP/1.1[0m" 404 -
+2025-08-31 21:49:50 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:50] "POST /api/control/wechat/stop HTTP/1.1" 200 -
+2025-08-31 21:49:51 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:51] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:49:51 [websocket] [ERROR] [_logging.py:77]  [WinError 10061] 由于目标计算机积极拒绝，无法连接。 - goodbye
+2025-08-31 21:49:54 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:54] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:49:56 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:56] "POST /api/control/onebot/stop HTTP/1.1" 200 -
+2025-08-31 21:49:59 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:49:59] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:04 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:04] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:09] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:14 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:14] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:19 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:19] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:24 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:24] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:29 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:29] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:34 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:34] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:39 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:39] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:41 [wxauto] [DEBUG] [wx.py:31]  开始监听
+2025-08-31 21:50:41 [werkzeug] [INFO] [_internal.py:97]  [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10001
+ * Running on http://192.168.2.8:10001
+2025-08-31 21:50:41 [werkzeug] [INFO] [_internal.py:97]  [33mPress CTRL+C to quit[0m
+2025-08-31 21:50:41 [wxauto] [DEBUG] [sessionbox.py:68]  切换聊天窗口: 汐灿, False, False, 0.5
+2025-08-31 21:50:43 [websocket] [ERROR] [_logging.py:77]  [WinError 10061] 由于目标计算机积极拒绝，无法连接。 - goodbye
+2025-08-31 21:50:44 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:44] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:46 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:46] "POST /api/control/onebot/stop HTTP/1.1" 200 -
+2025-08-31 21:50:47 [wxauto] [DEBUG] [sessionbox.py:152]  打开独立窗口: 汐灿
+2025-08-31 21:50:47 [wxauto] [DEBUG] [sessionbox.py:166]  未找到会话: 汐灿
+2025-08-31 21:50:47 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:47] "POST /api/control/wechat/stop HTTP/1.1" 200 -
+2025-08-31 21:50:48 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:48] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:49 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:49] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:54 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:54] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:50:59 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:50:59] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:04 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:04] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:08 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:08] "DELETE /api/monitor/users/汐灿 HTTP/1.1" 200 -
+2025-08-31 21:51:08 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:08] "GET /api/monitor/users HTTP/1.1" 200 -
+2025-08-31 21:51:09 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:09] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:14 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:14] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:19 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:19] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:24 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:24] "GET /api/status HTTP/1.1" 200 -
+2025-08-31 21:51:29 [werkzeug] [INFO] [_internal.py:97]  127.0.0.1 - - [31/Aug/2025 21:51:29] "GET /api/status HTTP/1.1" 200 -

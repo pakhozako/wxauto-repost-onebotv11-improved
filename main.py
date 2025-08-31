@@ -22,6 +22,7 @@ from web_ui import WebUI
 from onebot_converter import OneBotV11Converter
 from websocket_client import WebSocketClient
 from message_handler import MessageHandler
+from window_controller import WindowController
 
 # AstrBot插件相关导入（如果可用）
 try:
@@ -54,6 +55,7 @@ class WxAutoOneBotApp:
         self.onebot_converter = None
         self.websocket_client = None
         self.message_handler = None
+        self.window_controller = None
         
         # 运行状态
         self.is_running = False
@@ -80,13 +82,17 @@ class WxAutoOneBotApp:
                 self.websocket_client
             )
             
+            # 初始化窗口控制器
+            self.window_controller = WindowController(self.config_manager)
+            
             # 初始化Web UI
             self.web_ui = WebUI(
                 self.config_manager,
                 self.wechat_monitor,
                 self.websocket_client,  # onebot_client
                 self.websocket_client,
-                self.message_handler
+                self.message_handler,
+                self.window_controller
             )
             
             # 设置微信监听器的消息回调
@@ -130,6 +136,13 @@ class WxAutoOneBotApp:
             else:
                 logger.warning("⚠️  未配置监听用户，跳过监听器启动")
                 
+            # 启动窗口控制器（如果启用了定时最小化）
+            if self.window_controller and self.config_manager.get('wechat.window_minimize.enabled', False):
+                logger.info("🪟 启动窗口控制器，开始定时最小化功能")
+                self.window_controller.start()
+            else:
+                logger.info("⚠️  窗口定时最小化功能未启用")
+                
             # 启动Web UI（最后启动，避免输出被覆盖）
             if self.web_ui:
                 web_port = self.config_manager.get('webui.port', 10001)
@@ -159,6 +172,9 @@ class WxAutoOneBotApp:
                 
             if self.message_handler:
                 self.message_handler.stop()
+                
+            if self.window_controller:
+                self.window_controller.stop()
                 
             if self.web_ui:
                 self.web_ui.stop()
@@ -202,7 +218,8 @@ class WxAutoOneBotApp:
             'is_running': self.is_running,
             'wechat_monitor': self.wechat_monitor.get_status() if self.wechat_monitor else None,
             'websocket_client': self.websocket_client.get_status() if self.websocket_client else None,
-            'message_handler': self.message_handler.get_status() if self.message_handler else None
+            'message_handler': self.message_handler.get_status() if self.message_handler else None,
+            'window_controller': self.window_controller.get_status() if self.window_controller else None
         }
         return status
             

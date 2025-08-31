@@ -149,7 +149,9 @@ class WebSocketClient:
             json_data = json.dumps(message, ensure_ascii=False)
             self.ws.send(json_data)
             
-            logger.info(f"发送消息: {message.get('post_type', 'unknown')}")
+            # 根据消息内容显示更有意义的日志信息
+            msg_info = self._get_message_info(message)
+            logger.info(f"发送消息: {msg_info}")
             return True
             
         except Exception as e:
@@ -186,6 +188,58 @@ class WebSocketClient:
             return self.receive_queue.get_nowait()
         except Empty:
             return None
+            
+    def _get_message_info(self, message: Dict[str, Any]) -> str:
+        """获取消息的描述信息
+        
+        Args:
+            message: 消息字典
+            
+        Returns:
+            消息描述信息
+        """
+        try:
+            # 检查是否是OneBotV11事件消息
+            if 'post_type' in message:
+                post_type = message.get('post_type')
+                if post_type == 'message':
+                    msg_type = message.get('message_type', 'unknown')
+                    user_id = message.get('user_id', 'unknown')
+                    return f"消息事件 [{msg_type}] from {user_id}"
+                elif post_type == 'meta_event':
+                    meta_type = message.get('meta_event_type', 'unknown')
+                    return f"元事件 [{meta_type}]"
+                else:
+                    return f"事件 [{post_type}]"
+            
+            # 检查是否是API响应
+            elif 'echo' in message:
+                echo = message.get('echo', '')
+                status = message.get('status', 'unknown')
+                retcode = message.get('retcode', -1)
+                return f"API响应 [echo={echo}, status={status}, retcode={retcode}]"
+            
+            # 检查是否是API请求
+            elif 'action' in message:
+                action = message.get('action', 'unknown')
+                return f"API请求 [{action}]"
+            
+            # 其他类型的消息
+            else:
+                # 尝试从消息中提取有用信息
+                if 'user_id' in message:
+                    user_id = message.get('user_id', 'unknown')
+                    content = message.get('message', message.get('content', ''))
+                    if isinstance(content, str) and len(content) > 0:
+                        content_preview = content[:20] + ('...' if len(content) > 20 else '')
+                        return f"用户消息 [user_id={user_id}] {content_preview}"
+                    else:
+                        return f"用户消息 [user_id={user_id}]"
+                else:
+                    return "未知消息类型"
+                    
+        except Exception as e:
+            return f"消息解析失败: {e}"
             
     def _connect_loop(self):
         """连接循环"""

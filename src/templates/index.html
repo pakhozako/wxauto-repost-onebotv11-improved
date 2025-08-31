@@ -55,6 +55,38 @@
                             <label for="check-interval">检查间隔(秒):</label>
                             <input type="number" id="check-interval" min="0.1" step="0.1" value="1.0">
                         </div>
+                        
+                        <div class="config-subgroup">
+                            <h4><i class="fas fa-window-minimize"></i> 窗口定时最小化 (风控规避)</h4>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="window-minimize-enabled"> 启用定时最小化
+                                </label>
+                                <div class="form-help">
+                                    <small>定期最小化微信窗口后立即恢复，可能有助于规避微信风控检测</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minimize-interval">最小化间隔(秒):</label>
+                                <input type="number" id="minimize-interval" min="60" value="3600">
+                                <div class="form-help">
+                                    <small>建议设置为3600秒(1小时)或更长，避免过于频繁</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="restore-delay">恢复延迟(秒):</label>
+                                <input type="number" id="restore-delay" min="0.1" step="0.1" value="1.0">
+                                <div class="form-help">
+                                    <small>最小化后多久恢复窗口，建议保持默认值</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-info" onclick="testMinimize()">测试最小化</button>
+                                <div class="form-help">
+                                    <small>点击测试按钮可立即执行一次最小化操作</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="config-group">
@@ -137,6 +169,20 @@
                             <div class="control-buttons">
                                 <button class="btn btn-success" onclick="controlService('onebot', 'start')">启动</button>
                                 <button class="btn btn-danger" onclick="controlService('onebot', 'stop')">停止</button>
+                            </div>
+                        </div>
+                        
+                        <div class="status-card">
+                            <h3>窗口控制器</h3>
+                            <div class="status-info" id="window-controller-info">
+                                <p>状态: <span id="window-controller-running">未知</span></p>
+                                <p>微信窗口: <span id="wechat-window-found">未检测</span></p>
+                                <p>最小化间隔: <span id="minimize-interval-display">未配置</span></p>
+                            </div>
+                            <div class="control-buttons">
+                                <button class="btn btn-success" onclick="controlService('window', 'start')">启动</button>
+                                <button class="btn btn-danger" onclick="controlService('window', 'stop')">停止</button>
+                                <button class="btn btn-info" onclick="testWindowMinimize()">测试最小化</button>
                             </div>
                         </div>
                     </div>
