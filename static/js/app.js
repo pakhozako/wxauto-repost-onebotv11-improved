@@ -77,6 +77,11 @@ function updateConfigForm() {
     document.getElementById('wechat-enabled').checked = currentConfig.wechat?.enabled || false;
     document.getElementById('check-interval').value = currentConfig.wechat?.check_interval || 1.0;
     
+    // 窗口最小化配置
+    document.getElementById('window-minimize-enabled').checked = currentConfig.wechat?.window_minimize?.enabled || false;
+    document.getElementById('minimize-interval').value = currentConfig.wechat?.window_minimize?.interval || 3600;
+    document.getElementById('restore-delay').value = currentConfig.wechat?.window_minimize?.restore_delay || 1.0;
+    
     // OneBot配置
     document.getElementById('onebot-enabled').checked = currentConfig.onebot?.enabled || false;
     document.getElementById('ws-url').value = currentConfig.onebot?.ws_url || '';
@@ -95,7 +100,12 @@ async function saveConfig() {
             wechat: {
                 ...currentConfig.wechat,
                 enabled: document.getElementById('wechat-enabled').checked,
-                check_interval: parseFloat(document.getElementById('check-interval').value)
+                check_interval: parseFloat(document.getElementById('check-interval').value),
+                window_minimize: {
+                    enabled: document.getElementById('window-minimize-enabled').checked,
+                    interval: parseInt(document.getElementById('minimize-interval').value),
+                    restore_delay: parseFloat(document.getElementById('restore-delay').value)
+                }
             },
             onebot: {
                 ...currentConfig.onebot,
