@@ -55,9 +55,11 @@ class WindowController:
             
         try:
             # 查找微信窗口
+            logger.info("正在查找微信窗口...")
             if not self._find_wechat_windows():
                 logger.error("未找到微信窗口，请确保微信已启动")
                 return False
+            logger.info("微信窗口查找成功")
                 
             self.running = True
             

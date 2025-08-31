@@ -347,41 +347,6 @@ function updateStatusPage(status) {
     if (onebotUrl) {
         onebotUrl.textContent = status.onebot.ws_url || '未配置';
     }
-    
-    // 窗口控制器状态
-    const windowControllerRunning = document.getElementById('window-controller-running');
-    const wechatWindowFound = document.getElementById('wechat-window-found');
-    const minimizeIntervalDisplay = document.getElementById('minimize-interval-display');
-    
-    if (windowControllerRunning) {
-        windowControllerRunning.textContent = status.window_controller.running ? '运行中' : '已停止';
-        windowControllerRunning.style.color = status.window_controller.running ? '#48bb78' : '#f56565';
-    }
-    
-    if (wechatWindowFound) {
-        const windowsCount = status.window_controller.wechat_windows_count || 0;
-        if (windowsCount > 0) {
-            wechatWindowFound.textContent = `已检测到 ${windowsCount} 个窗口`;
-            wechatWindowFound.style.color = '#48bb78';
-            
-            // 显示窗口详细信息（如果有的话）
-            if (status.window_controller.wechat_windows && status.window_controller.wechat_windows.length > 0) {
-                const windowsList = status.window_controller.wechat_windows.map((win, index) => 
-                    `${index + 1}. ${win.window_text} (${win.class_name})`
-                ).join('\n');
-                wechatWindowFound.title = `检测到的微信窗口:\n${windowsList}`;
-            }
-        } else {
-            wechatWindowFound.textContent = '未检测到';
-            wechatWindowFound.style.color = '#f56565';
-            wechatWindowFound.title = '';
-        }
-    }
-    
-    if (minimizeIntervalDisplay) {
-        const interval = status.window_controller.config ? status.window_controller.config.interval : 3600;
-        minimizeIntervalDisplay.textContent = `${interval}秒`;
-    }
 }
 
 // 控制服务

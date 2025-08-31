@@ -347,6 +347,19 @@ class WebUI:
                             'success': False,
                             'error': '无效的操作'
                         }), 400
+                        
+                elif service == 'window' and self.window_controller:
+                    if action == 'start':
+                        result = self.window_controller.start()
+                        message = '窗口控制器已启动' if result else '窗口控制器启动失败'
+                    elif action == 'stop':
+                        result = self.window_controller.stop()
+                        message = '窗口控制器已停止' if result else '窗口控制器停止失败'
+                    else:
+                        return jsonify({
+                            'success': False,
+                            'error': '无效的操作'
+                        }), 400
                 else:
                     return jsonify({
                         'success': False,

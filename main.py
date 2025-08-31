@@ -90,7 +90,7 @@ class WxAutoOneBotApp:
                 self.config_manager,
                 self.wechat_monitor,
                 self.websocket_client,  # onebot_client
-                self.websocket_client,
+                self.websocket_client,  # websocket_client
                 self.message_handler,
                 self.window_controller
             )

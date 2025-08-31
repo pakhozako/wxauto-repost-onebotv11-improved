@@ -10,7 +10,7 @@
     "check_interval": 1,
     "auto_reply": false,
     "window_minimize": {
-      "enabled": false,
+      "enabled": true,
       "interval": 3600,
       "restore_delay": 1
     }
