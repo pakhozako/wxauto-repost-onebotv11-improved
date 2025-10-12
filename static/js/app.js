@@ -240,12 +240,6 @@ async function addMonitorUser() {
         return;
     }
     
-    // 验证QQ号格式（纯数字）
-    if (!/^\d+$/.test(user_id)) {
-        showToast('QQ号必须是纯数字', 'error');
-        return;
-    }
-    
     try {
         const response = await fetch('/api/monitor/users', {
             method: 'POST',
