@@ -8,3 +8,12 @@ wxauto_logs/
 *.log
 .env
 config/config.json
+config/backups/
+htmlcov/
+.coverage
+.coverage.*
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
