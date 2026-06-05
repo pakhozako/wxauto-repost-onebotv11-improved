@@ -6,9 +6,14 @@ Web UI模块
 """
 
 import threading
+import secrets
+import hashlib
+from functools import wraps
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from pathlib import Path
+
+from logger import logger
 
 class WebUI:
     """Web用户界面"""
@@ -31,10 +36,17 @@ class WebUI:
         self.message_handler = message_handler
         self.window_controller = window_controller
         
+        # 生成访问token（首次启动时显示在日志中）
+        self.access_token = secrets.token_urlsafe(32)
+        self.token_hash = hashlib.sha256(self.access_token.encode()).hexdigest()
+        logger.info(f"🔑 WebUI访问令牌: {self.access_token}")
+        logger.info(f"📎 访问地址: http://localhost:{config_manager.get('webui.port', 10001)}?token={self.access_token}")
+        
         # 创建Flask应用
         self.app = Flask(__name__, 
                         template_folder=self._get_template_dir(),
                         static_folder=self._get_static_dir())
+        self.app.secret_key = secrets.token_hex(16)
         CORS(self.app)
         
         # 设置路由
@@ -59,12 +71,37 @@ class WebUI:
     def _setup_routes(self):
         """设置路由"""
         
+        def require_token(f):
+            """Token认证装饰器"""
+            @wraps(f)
+            def decorated(*args, **kwargs):
+                # 从query参数或header获取token
+                token = request.args.get('token') or request.headers.get('X-Access-Token')
+                
+                if not token:
+                    return jsonify({'success': False, 'error': '缺少访问令牌'}), 401
+                
+                # 验证token（使用hash比较防止时序攻击）
+                token_hash = hashlib.sha256(token.encode()).hexdigest()
+                if not secrets.compare_digest(token_hash, self.token_hash):
+                    return jsonify({'success': False, 'error': '访问令牌无效'}), 403
+                
+                return f(*args, **kwargs)
+            return decorated
+        
         @self.app.route('/')
         def index():
-            """主页"""
-            return render_template('index.html')
+            """主页 - 检查token参数"""
+            token = request.args.get('token')
+            if not token:
+                return jsonify({'error': '请提供访问令牌', 'hint': '在URL后加 ?token=你的令牌'}), 401
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
+            if not secrets.compare_digest(token_hash, self.token_hash):
+                return jsonify({'error': '访问令牌无效'}), 403
+            return render_template('index.html', token=token)
             
         @self.app.route('/api/config', methods=['GET'])
+        @require_token
         def get_config():
             """获取配置"""
             try:
@@ -80,6 +117,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/config', methods=['POST'])
+        @require_token
         def update_config():
             """更新配置"""
             try:
@@ -112,6 +150,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/config/validate', methods=['POST'])
+        @require_token
         def validate_config():
             """验证配置"""
             try:
@@ -145,6 +184,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/monitor/users', methods=['GET'])
+        @require_token
         def get_monitor_users():
             """获取监听用户列表"""
             try:
@@ -160,6 +200,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/monitor/users', methods=['POST'])
+        @require_token
         def add_monitor_user():
             """添加监听用户"""
             try:
@@ -221,6 +262,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/monitor/users/<username>', methods=['DELETE'])
+        @require_token
         def remove_monitor_user(username):
             """移除监听用户"""
             try:
@@ -244,6 +286,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/status', methods=['GET'])
+        @require_token
         def get_status():
             """获取系统状态"""
             try:
@@ -288,6 +331,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/window/test-minimize', methods=['POST'])
+        @require_token
         def test_minimize():
             """测试窗口最小化功能"""
             try:
@@ -317,6 +361,7 @@ class WebUI:
                 }), 500
                 
         @self.app.route('/api/control/<service>/<action>', methods=['POST'])
+        @require_token
         def control_service(service, action):
             """控制服务"""
             try:
