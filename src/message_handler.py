@@ -6,6 +6,7 @@
 """
 
 import time
+import re
 import threading
 from typing import Dict, Any, List, Optional
 from pathlib import Path
@@ -114,19 +115,19 @@ class MessageHandler:
                         break
             
             if not is_monitored:
-                print(f"⚠️  用户 {user_name} 不在监听列表，忽略消息")
+                logger.warning(f"用户 {user_name} 不在监听列表，忽略消息")
                 return
                 
             # 发送到WebSocket后端
             success = self.websocket_client.send_wechat_message(wechat_msg)
             
             if success:
-                print(f"✅ 消息已转发: {user_name}")
+                logger.info(f"消息已转发: {user_name}")
             else:
-                print(f"❌ 转发失败: {user_name}")
+                logger.error(f"转发失败: {user_name}")
                 
         except Exception as e:
-            print(f"❌ 处理微信消息失败: {e}")
+            logger.error(f"处理微信消息失败: {e}")
             
     def _on_websocket_message(self, message: Dict[str, Any]):
         """WebSocket消息回调
@@ -139,20 +140,32 @@ class MessageHandler:
             self.message_queue.put(message)
             
         except Exception as e:
-            print(f"WebSocket消息回调失败: {e}")
+            logger.error(f"WebSocket消息回调失败: {e}")
             
     def _on_websocket_connect(self):
         """WebSocket连接回调"""
-        print("🔗 WebSocket已连接，消息处理器就绪")
+        logger.info("WebSocket已连接，消息处理器就绪")
         
     def _on_websocket_disconnect(self):
         """WebSocket断开连接回调"""
-        print("🔌 WebSocket连接断开，消息处理器暂停")
+        logger.info("WebSocket连接断开，消息处理器暂停")
         
     def _message_handler_loop(self):
         """消息处理循环"""
+        # 队列告警阈值
+        queue_warning_threshold = 100
+        last_warning_time = 0
+        
         while self.is_running:
             try:
+                # 检查队列大小
+                queue_size = self.message_queue.qsize()
+                if queue_size > queue_warning_threshold:
+                    current_time = time.time()
+                    if current_time - last_warning_time > 60:  # 每分钟最多告警一次
+                        logger.warning(f"消息队列积压: {queue_size} 条待处理")
+                        last_warning_time = current_time
+                
                 # 获取待处理的消息
                 try:
                     message = self.message_queue.get(timeout=1)
@@ -168,7 +181,7 @@ class MessageHandler:
                 self.message_queue.task_done()
                 
             except Exception as e:
-                print(f"❌ 消息处理循环异常: {e}")
+                logger.error(f"消息处理循环异常: {e}")
                 time.sleep(1)
                 
     def _process_message(self, message: Dict[str, Any]):
@@ -184,7 +197,7 @@ class MessageHandler:
                 self._handle_api_request(message)
             elif message.get('post_type') == 'message':
                 # 消息事件（通常不会收到，因为这是我们发送的）
-                print(f"收到消息事件: {message}")
+                logger.debug(f"收到消息事件: {message}")
             elif 'echo' in message:
                 # API响应
                 self._handle_api_response(message)
@@ -476,16 +489,40 @@ class MessageHandler:
                     
             file_path = self.download_cache_dir / filename
             
-            # 下载文件
-            response = requests.get(url, timeout=30)
+            # 检查文件是否已存在
+            if file_path.exists():
+                logger.info(f"文件已存在，跳过下载: {filename}")
+                return str(file_path)
+            
+            # 下载文件（带进度）
+            logger.info(f"开始下载文件: {url}")
+            response = requests.get(url, timeout=30, stream=True)
             response.raise_for_status()
             
+            # 获取文件大小
+            total_size = int(response.headers.get('content-length', 0))
+            downloaded_size = 0
+            
             with open(file_path, 'wb') as f:
-                f.write(response.content)
-                
-            logger.info(f"文件下载成功: {file_path}")
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded_size += len(chunk)
+                        
+                        # 每1MB显示进度
+                        if total_size > 0 and downloaded_size % (1024 * 1024) == 0:
+                            progress = (downloaded_size / total_size) * 100
+                            logger.debug(f"下载进度: {progress:.1f}%")
+            
+            logger.info(f"文件下载成功: {filename} ({downloaded_size} bytes)")
             return str(file_path)
             
+        except requests.exceptions.Timeout:
+            logger.error(f"下载文件超时: {url}")
+            return None
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"下载文件HTTP错误: {e}")
+            return None
         except Exception as e:
             logger.error(f"下载文件失败: {e}")
             return None
@@ -542,60 +579,66 @@ class MessageHandler:
         Returns:
             OneBotV11消息段数组
         """
-        import re
-        
         segments = []
         last_end = 0
         
         # CQ码正则表达式
         cq_pattern = r'\[CQ:([^,\]]+)(?:,([^\]]+))?\]'
         
-        for match in re.finditer(cq_pattern, message):
-            start, end = match.span()
+        try:
+            for match in re.finditer(cq_pattern, message):
+                start, end = match.span()
+                
+                # 添加CQ码前的文本
+                if start > last_end:
+                    text = message[last_end:start]
+                    if text:
+                        segments.append({
+                            'type': 'text',
+                            'data': {'text': text}
+                        })
+                
+                # 解析CQ码
+                cq_type = match.group(1)
+                cq_params_str = match.group(2) or ''
+                
+                # 解析参数
+                cq_data = {}
+                if cq_params_str:
+                    for param in cq_params_str.split(','):
+                        if '=' in param:
+                            key, value = param.split('=', 1)
+                            # 反转义CQ码特殊字符
+                            value = value.replace('&#91;', '[').replace('&#93;', ']').replace('&#44;', ',').replace('&amp;', '&')
+                            cq_data[key] = value
+                
+                segments.append({
+                    'type': cq_type,
+                    'data': cq_data
+                })
+                
+                last_end = end
             
-            # 添加CQ码前的文本
-            if start > last_end:
-                text = message[last_end:start]
+            # 添加最后的文本
+            if last_end < len(message):
+                text = message[last_end:]
                 if text:
                     segments.append({
                         'type': 'text',
                         'data': {'text': text}
                     })
             
-            # 解析CQ码
-            cq_type = match.group(1)
-            cq_params_str = match.group(2) or ''
-            
-            # 解析参数
-            cq_data = {}
-            if cq_params_str:
-                for param in cq_params_str.split(','):
-                    if '=' in param:
-                        key, value = param.split('=', 1)
-                        cq_data[key] = value
-            
-            segments.append({
-                'type': cq_type,
-                'data': cq_data
-            })
-            
-            last_end = end
-        
-        # 添加最后的文本
-        if last_end < len(message):
-            text = message[last_end:]
-            if text:
+            # 如果没有找到CQ码，整个消息作为文本
+            if not segments:
                 segments.append({
                     'type': 'text',
-                    'data': {'text': text}
+                    'data': {'text': message}
                 })
-        
-        # 如果没有找到CQ码，整个消息作为文本
-        if not segments:
-            segments.append({
-                'type': 'text',
-                'data': {'text': message}
-            })
+                
+        except Exception as e:
+            logger.error(f"解析CQ码失败: {e}")
+            # 出错时将整个消息作为文本
+            segments = [{'type': 'text', 'data': {'text': message}}]
         
         return segments
         
