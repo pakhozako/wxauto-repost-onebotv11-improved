@@ -11,6 +11,8 @@ import hashlib
 from functools import wraps
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from pathlib import Path
 
 from logger import logger
@@ -48,6 +50,14 @@ class WebUI:
                         static_folder=self._get_static_dir())
         self.app.secret_key = secrets.token_hex(16)
         CORS(self.app)
+        
+        # 添加限流保护
+        self.limiter = Limiter(
+            app=self.app,
+            key_func=get_remote_address,
+            default_limits=["200 per minute", "50 per second"],
+            storage_uri="memory://"
+        )
         
         # 设置路由
         self._setup_routes()

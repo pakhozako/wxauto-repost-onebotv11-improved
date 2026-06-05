@@ -7,7 +7,7 @@
 
 import time
 import threading
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Callable
 from pathlib import Path
 
 from logger import logger
@@ -55,11 +55,11 @@ class WeChatMonitor:
         self.file_save_dir.mkdir(parents=True, exist_ok=True)
         self.voice_save_dir.mkdir(parents=True, exist_ok=True)
         
-    def set_message_callback(self, callback):
+    def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
         """设置消息回调函数
         
         Args:
-            callback: 消息回调函数
+            callback: 消息回调函数，接收 (username, message) 参数
         """
         self.message_callback = callback
         

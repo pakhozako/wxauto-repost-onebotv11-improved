@@ -7,8 +7,9 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import threading
+from jsonschema import validate, ValidationError
 
 from logger import logger
 
@@ -72,6 +73,54 @@ class ConfigManager:
                 "max_size": "10MB",
                 "backup_count": 5
             }
+        }
+        
+        # 配置校验Schema
+        self.config_schema = {
+            "type": "object",
+            "properties": {
+                "webui": {
+                    "type": "object",
+                    "properties": {
+                        "host": {"type": "string"},
+                        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+                        "debug": {"type": "boolean"}
+                    },
+                    "required": ["host", "port"]
+                },
+                "wechat": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {"type": "boolean"},
+                        "monitor_users": {"type": "array"},
+                        "check_interval": {"type": "number", "minimum": 0.1},
+                        "auto_reply": {"type": "boolean"}
+                    },
+                    "required": ["enabled"]
+                },
+                "onebot": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {"type": "boolean"},
+                        "ws_url": {"type": "string", "format": "uri"},
+                        "access_token": {"type": "string"},
+                        "reconnect_interval": {"type": "integer", "minimum": 1},
+                        "heartbeat_interval": {"type": "integer", "minimum": 5},
+                        "self_id": {"type": "string"}
+                    },
+                    "required": ["enabled", "ws_url"]
+                },
+                "message": {
+                    "type": "object",
+                    "properties": {
+                        "max_length": {"type": "integer", "minimum": 1},
+                        "enable_image": {"type": "boolean"},
+                        "enable_file": {"type": "boolean"},
+                        "enable_voice": {"type": "boolean"}
+                    }
+                }
+            },
+            "required": ["webui", "wechat", "onebot", "message"]
         }
         
         # 加载配置文件
@@ -197,6 +246,27 @@ class ConfigManager:
         """
         return self.config_data.copy()
         
+    def validate_config(self, config: Optional[Dict[str, Any]] = None) -> List[str]:
+        """验证配置格式
+        
+        Args:
+            config: 要验证的配置，默认使用当前配置
+            
+        Returns:
+            错误消息列表，空列表表示验证通过
+        """
+        errors = []
+        config_to_validate = config or self.config_data
+        
+        try:
+            validate(instance=config_to_validate, schema=self.config_schema)
+        except ValidationError as e:
+            errors.append(f"配置格式错误: {e.message} (路径: {'/'.join(str(p) for p in e.absolute_path)})")
+        except Exception as e:
+            errors.append(f"配置验证失败: {str(e)}")
+            
+        return errors
+        
     def reset_to_default(self) -> bool:
         """重置为默认配置
         
@@ -292,29 +362,3 @@ class ConfigManager:
                 result[key] = value
                 
         return result
-        
-    def validate_config(self) -> List[str]:
-        """验证配置的有效性
-        
-        Returns:
-            错误信息列表，空列表表示配置有效
-        """
-        errors = []
-        
-        # 验证WebUI配置
-        port = self.get('webui.port')
-        if not isinstance(port, int) or port < 1 or port > 65535:
-            errors.append("WebUI端口必须是1-65535之间的整数")
-            
-        # 验证OneBot配置
-        if self.get('onebot.enabled'):
-            ws_url = self.get('onebot.ws_url')
-            if not ws_url or not ws_url.startswith(('ws://', 'wss://')):
-                errors.append("OneBot WebSocket地址格式不正确")
-                
-        # 验证监听用户
-        monitor_users = self.get('wechat.monitor_users', [])
-        if not isinstance(monitor_users, list):
-            errors.append("监听用户列表格式不正确")
-            
-        return errors
