@@ -1,13 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 统一日志模块
-支持独立运行模式和AstrBot插件模式
+支持独立运行模式和AstrBot插件模式，支持日志轮转
 """
 
 import logging
 import sys
-from pathlib import Path
+from logging.handlers import RotatingFileHandler
+from constants import LOG_DIR, DEFAULT_LOG_MAX_SIZE, DEFAULT_LOG_BACKUP_COUNT
+
 
 def get_logger(name: str = "wxauto") -> logging.Logger:
     """获取统一的日志记录器
@@ -41,15 +41,19 @@ def get_logger(name: str = "wxauto") -> logging.Logger:
         console_handler.setFormatter(console_format)
         logger_instance.addHandler(console_handler)
         
-        # 文件输出
+        # 文件输出（带轮转）
         try:
-            log_dir = Path(__file__).parent.parent / "wxauto_logs"
-            log_dir.mkdir(exist_ok=True)
+            LOG_DIR.mkdir(parents=True, exist_ok=True)
             
             from datetime import datetime
-            log_file = log_dir / f"app_{datetime.now().strftime('%Y%m%d')}.log"
+            log_file = LOG_DIR / f"app_{datetime.now().strftime('%Y%m%d')}.log"
             
-            file_handler = logging.FileHandler(log_file, encoding='utf-8')
+            file_handler = RotatingFileHandler(
+                log_file,
+                maxBytes=DEFAULT_LOG_MAX_SIZE,
+                backupCount=DEFAULT_LOG_BACKUP_COUNT,
+                encoding='utf-8'
+            )
             file_handler.setLevel(logging.DEBUG)
             file_format = logging.Formatter(
                 '[%(asctime)s] [%(levelname)s] %(message)s',
