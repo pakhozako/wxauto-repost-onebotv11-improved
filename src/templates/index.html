@@ -1,216 +1,1174 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>微信消息转发到OneBotV11 - 配置管理</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>WxAuto OneBot - 控制面板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 12px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 32px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Status Cards */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .status-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .status-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .status-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .status-card-icon.wechat { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .status-card-icon.onebot { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+        .status-card-icon.window { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.online { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .status-badge.offline { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .status-card-title {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .status-card-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .status-card-footer {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* User List */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .user-item:hover {
+            background: var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .user-id {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.info { background: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-robot"></i> 微信消息转发到OneBotV11</h1>
-            <div class="status-bar">
-                <div class="status-item" id="wechat-status">
-                    <i class="fas fa-comments"></i>
-                    <span>微信监听: <span class="status-text">未知</span></span>
-                </div>
-                <div class="status-item" id="onebot-status">
-                    <i class="fas fa-plug"></i>
-                    <span>OneBot: <span class="status-text">未知</span></span>
-                </div>
-            </div>
-        </header>
-        
-        <nav class="tabs">
-            <button class="tab-button active" data-tab="config">配置管理</button>
-            <button class="tab-button" data-tab="monitor">监听用户</button>
-            <button class="tab-button" data-tab="status">系统状态</button>
-            <button class="tab-button" data-tab="logs">日志查看</button>
-        </nav>
-        
-        <main>
-            <!-- 配置管理标签页 -->
-            <div class="tab-content active" id="config-tab">
-                <div class="config-section">
-                    <h2><i class="fas fa-cog"></i> 基础配置</h2>
-                    
-                    <div class="config-group">
-                        <h3>WebUI设置</h3>
-                        <div class="form-group">
-                            <label for="webui-port">端口:</label>
-                            <input type="number" id="webui-port" min="1" max="65535" value="10001">
-                        </div>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-robot"></i>
                     </div>
-                    
-                    <div class="config-group">
-                        <h3>微信设置</h3>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="wechat-enabled"> 启用微信监听
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label for="check-interval">检查间隔(秒):</label>
-                            <input type="number" id="check-interval" min="0.1" step="0.1" value="1.0">
-                        </div>
-                        
-                        <div class="config-subgroup">
-                            <h4><i class="fas fa-window-minimize"></i> 窗口定时最小化 (风控规避)</h4>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="window-minimize-enabled"> 启用定时最小化
-                                </label>
-                                <div class="form-help">
-                                    <small>定期最小化微信窗口后立即恢复，可能有助于规避微信风控检测</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="minimize-interval">最小化间隔(秒):</label>
-                                <input type="number" id="minimize-interval" min="60" value="3600">
-                                <div class="form-help">
-                                    <small>建议设置为3600秒(1小时)或更长，避免过于频繁</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="restore-delay">恢复延迟(秒):</label>
-                                <input type="number" id="restore-delay" min="0.1" step="0.1" value="1.0">
-                                <div class="form-help">
-                                    <small>最小化后多久恢复窗口，建议保持默认值</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button class="btn btn-info" onclick="testWindowMinimize()">测试最小化</button>
-                                <div class="form-help">
-                                    <small>点击测试按钮可立即执行一次最小化操作</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="config-group">
-                        <h3>OneBotV11设置</h3>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="onebot-enabled"> 启用OneBot客户端
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label for="ws-url">反向WebSocket地址:</label>
-                            <input type="text" id="ws-url" placeholder="ws://localhost:10001/ws">
-                        </div>
-                        <div class="form-group">
-                            <label for="access-token">访问令牌:</label>
-                            <input type="password" id="access-token" placeholder="可选">
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button class="btn btn-primary" onclick="saveConfig()">保存配置</button>
-                        <button class="btn btn-secondary" onclick="loadConfig()">重新加载</button>
-                        <button class="btn btn-danger" onclick="resetConfig()">重置为默认</button>
+                    <div class="logo-text">
+                        <h1>WxAuto OneBot</h1>
+                        <p>微信消息转发框架</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- 监听用户标签页 -->
-            <div class="tab-content" id="monitor-tab">
-                <div class="monitor-section">
-                    <h2><i class="fas fa-users"></i> 监听用户管理</h2>
-                    
-                    <div class="add-user-form">
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">概览</div>
+                    <div class="nav-item active" data-tab="dashboard">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>仪表盘</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">配置</div>
+                    <div class="nav-item" data-tab="wechat">
+                        <i class="fab fa-weixin"></i>
+                        <span>微信设置</span>
+                    </div>
+                    <div class="nav-item" data-tab="onebot">
+                        <i class="fas fa-plug"></i>
+                        <span>OneBot设置</span>
+                    </div>
+                    <div class="nav-item" data-tab="users">
+                        <i class="fas fa-users"></i>
+                        <span>监听用户</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">系统</div>
+                    <div class="nav-item" data-tab="logs">
+                        <i class="fas fa-file-alt"></i>
+                        <span>系统日志</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                    <span id="theme-text">深色模式</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="header">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="page-title">仪表盘</h2>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="loadConfig()">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="saveConfig()">
+                        <i class="fas fa-save"></i> 保存配置
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard-tab">
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="status-card-header">
+                            <div class="status-card-icon wechat">
+                                <i class="fab fa-weixin"></i>
+                            </div>
+                            <span class="status-badge offline" id="wechat-badge">离线</span>
+                        </div>
+                        <div class="status-card-title">微信监听</div>
+                        <div class="status-card-value" id="wechat-status-text">--</div>
+                        <div class="status-card-footer">
+                            监听用户: <span id="wechat-users-count">0</span> 个
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="status-card-header">
+                            <div class="status-card-icon onebot">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <span class="status-badge offline" id="onebot-badge">断开</span>
+                        </div>
+                        <div class="status-card-title">OneBot连接</div>
+                        <div class="status-card-value" id="onebot-status-text">--</div>
+                        <div class="status-card-footer" id="onebot-url-display">
+                            未配置
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="status-card-header">
+                            <div class="status-card-icon window">
+                                <i class="fas fa-window-minimize"></i>
+                            </div>
+                            <span class="status-badge offline" id="window-badge">停止</span>
+                        </div>
+                        <div class="status-card-title">窗口控制器</div>
+                        <div class="status-card-value" id="window-status-text">--</div>
+                        <div class="status-card-footer">
+                            检测窗口: <span id="window-count">0</span> 个
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-bolt"></i> 快速操作
+                        </div>
+                    </div>
+                    <div class="card-body" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="controlService('wechat', 'start')">
+                            <i class="fas fa-play"></i> 启动微信监听
+                        </button>
+                        <button class="btn btn-danger" onclick="controlService('wechat', 'stop')">
+                            <i class="fas fa-stop"></i> 停止微信监听
+                        </button>
+                        <button class="btn btn-success" onclick="controlService('onebot', 'start')">
+                            <i class="fas fa-play"></i> 启动OneBot
+                        </button>
+                        <button class="btn btn-danger" onclick="controlService('onebot', 'stop')">
+                            <i class="fas fa-stop"></i> 停止OneBot
+                        </button>
+                        <button class="btn btn-secondary" onclick="testWindowMinimize()">
+                            <i class="fas fa-window-minimize"></i> 测试窗口最小化
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WeChat Tab -->
+            <div class="tab-content" id="wechat-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fab fa-weixin"></i> 微信监听设置
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="wechat-enabled">
+                            <label for="wechat-enabled">启用微信消息监听</label>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label class="form-label">消息检查间隔 (秒)</label>
+                            <input type="number" class="form-input" id="check-interval" min="0.1" step="0.1" value="1.0">
+                            <div class="form-hint">建议设置为1秒，过快可能导致CPU占用过高</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-window-minimize"></i> 窗口定时最小化
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="window-minimize-enabled">
+                            <label for="window-minimize-enabled">启用定时最小化（风控规避）</label>
+                        </div>
+                        <div class="form-hint" style="margin-top: 8px; margin-bottom: 20px;">
+                            定期最小化微信窗口后立即恢复，可能有助于规避微信风控检测
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">最小化间隔 (秒)</label>
+                                <input type="number" class="form-input" id="minimize-interval" min="60" value="3600">
+                                <div class="form-hint">建议3600秒(1小时)或更长</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">恢复延迟 (秒)</label>
+                                <input type="number" class="form-input" id="restore-delay" min="0.1" step="0.1" value="1.0">
+                                <div class="form-hint">最小化后多久恢复窗口</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OneBot Tab -->
+            <div class="tab-content" id="onebot-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-plug"></i> OneBot V11 设置
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="onebot-enabled">
+                            <label for="onebot-enabled">启用OneBot客户端</label>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label class="form-label">反向WebSocket地址</label>
+                            <input type="text" class="form-input" id="ws-url" placeholder="ws://localhost:10001/ws">
+                            <div class="form-hint">OneBot后端服务的WebSocket地址</div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="new-username">添加监听用户:</label>
-                            <div class="input-group">
-                                <input type="text" id="new-username" placeholder="输入微信用户昵称">
-                                <input type="text" id="new-userid" placeholder="输入QQ号">
-                                <button class="btn btn-primary" onclick="addMonitorUser()">添加</button>
-                            </div>
-                            <div class="form-help">
-                                <small style="color:red">请在QQ号输入微信昵称，用于消息发送</small>
-                            </div>
-                            <div class="form-help">
-                                <small>请输入微信昵称和对应的QQ号，用于消息转发时的用户ID映射</small>
-                            </div>
+                            <label class="form-label">访问令牌</label>
+                            <input type="password" class="form-input" id="access-token" placeholder="可选，留空表示无认证">
+                            <div class="form-hint">用于连接认证的Access Token</div>
                         </div>
-                    </div>
-                    
-                    <div class="user-list">
-                        <h3>当前监听用户列表:</h3>
-                        <ul id="monitor-users-list">
-                            <!-- 动态加载用户列表 -->
-                        </ul>
                     </div>
                 </div>
             </div>
-            
-            <!-- 系统状态标签页 -->
-            <div class="tab-content" id="status-tab">
-                <div class="status-section">
-                    <h2><i class="fas fa-chart-line"></i> 系统状态</h2>
-                    
-                    <div class="status-cards">
-                        <div class="status-card">
-                            <h3>微信监听</h3>
-                            <div class="status-info" id="wechat-info">
-                                <p>状态: <span id="wechat-running">未知</span></p>
-                                <p>监听用户数: <span id="wechat-users-count">0</span></p>
+
+            <!-- Users Tab -->
+            <div class="tab-content" id="users-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-user-plus"></i> 添加监听用户
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">微信昵称</label>
+                                <input type="text" class="form-input" id="new-username" placeholder="输入微信用户昵称">
                             </div>
-                            <div class="control-buttons">
-                                <button class="btn btn-success" onclick="controlService('wechat', 'start')">启动</button>
-                                <button class="btn btn-danger" onclick="controlService('wechat', 'stop')">停止</button>
+                            <div class="form-group">
+                                <label class="form-label">QQ号</label>
+                                <input type="text" class="form-input" id="new-userid" placeholder="输入对应QQ号">
                             </div>
                         </div>
-                        
-                        <div class="status-card">
-                            <h3>OneBot客户端</h3>
-                            <div class="status-info" id="onebot-info">
-                                <p>状态: <span id="onebot-connected">未知</span></p>
-                                <p>WebSocket地址: <span id="onebot-url">未配置</span></p>
-                            </div>
-                            <div class="control-buttons">
-                                <button class="btn btn-success" onclick="controlService('onebot', 'start')">启动</button>
-                                <button class="btn btn-danger" onclick="controlService('onebot', 'stop')">停止</button>
-                            </div>
+                        <button class="btn btn-primary" onclick="addMonitorUser()">
+                            <i class="fas fa-plus"></i> 添加用户
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-users"></i> 监听用户列表
                         </div>
-                        
-                        <div class="status-card">
-                            <h3>窗口控制器</h3>
-                            <div class="status-info" id="window-controller-info">
-                                <p>状态: <span id="window-controller-running">未知</span></p>
-                                <p>微信窗口: <span id="wechat-window-found">未检测</span></p>
-                                <p>最小化间隔: <span id="minimize-interval-display">未配置</span></p>
-                            </div>
-                            <div class="control-buttons">
-                                <button class="btn btn-success" onclick="controlService('window', 'start')">启动</button>
-                                <button class="btn btn-danger" onclick="controlService('window', 'stop')">停止</button>
-                                <button class="btn btn-info" onclick="testWindowMinimize()">测试最小化</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="user-list" id="users-list">
+                            <div class="empty-state">
+                                <i class="fas fa-users"></i>
+                                <p>暂无监听用户</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 日志查看标签页 -->
+
+            <!-- Logs Tab -->
             <div class="tab-content" id="logs-tab">
-                <div class="logs-section">
-                    <h2><i class="fas fa-file-alt"></i> 系统日志</h2>
-                    <div class="log-container">
-                        <pre id="log-content">日志功能开发中...</pre>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-file-alt"></i> 系统日志
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="refreshLogs()">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
                     </div>
-                    <div class="button-group">
-                        <button class="btn btn-primary" onclick="refreshLogs()">刷新日志</button>
-                        <button class="btn btn-secondary" onclick="clearLogs()">清空日志</button>
+                    <div class="card-body">
+                        <div style="background: var(--bg-input); border-radius: 8px; padding: 16px; max-height: 500px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6;" id="log-content">
+                            日志功能开发中...
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-    
-    <!-- 消息提示 -->
-    <div id="message-toast" class="toast"></div>
-    
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // 获取URL中的token参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('token') || '';
+
+        // 全局配置
+        let currentConfig = {};
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigation();
+            loadConfig();
+            loadMonitorUsers();
+            updateStatus();
+            setInterval(updateStatus, 5000);
+            initTheme();
+        });
+
+        // 初始化导航
+        function initNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const tab = item.dataset.tab;
+                    
+                    // 更新导航状态
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // 更新内容
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(tab + '-tab').classList.add('active');
+                    
+                    // 更新标题
+                    const titles = {
+                        dashboard: '仪表盘',
+                        wechat: '微信设置',
+                        onebot: 'OneBot设置',
+                        users: '监听用户',
+                        logs: '系统日志'
+                    };
+                    document.getElementById('page-title').textContent = titles[tab] || tab;
+                });
+            });
+        }
+
+        // 主题切换
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.dataset.theme = saved;
+            updateThemeUI(saved);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.dataset.theme;
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.dataset.theme = next;
+            localStorage.setItem('theme', next);
+            updateThemeUI(next);
+        }
+
+        function updateThemeUI(theme) {
+            document.getElementById('theme-icon').className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            document.getElementById('theme-text').textContent = theme === 'light' ? '深色模式' : '浅色模式';
+        }
+
+        // 移动端侧边栏
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // API请求封装
+        async function api(url, options = {}) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (accessToken) {
+                headers['X-Access-Token'] = accessToken;
+            }
+            
+            const response = await fetch(url, { ...options, headers: { ...headers, ...options.headers } });
+            return response.json();
+        }
+
+        // 加载配置
+        async function loadConfig() {
+            try {
+                const result = await api('/api/config');
+                if (result.success) {
+                    currentConfig = result.data;
+                    updateForm();
+                    showToast('配置加载成功', 'success');
+                } else {
+                    showToast('加载失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('加载失败: ' + e.message, 'error');
+            }
+        }
+
+        // 更新表单
+        function updateForm() {
+            document.getElementById('wechat-enabled').checked = currentConfig.wechat?.enabled || false;
+            document.getElementById('check-interval').value = currentConfig.wechat?.check_interval || 1.0;
+            document.getElementById('window-minimize-enabled').checked = currentConfig.wechat?.window_minimize?.enabled || false;
+            document.getElementById('minimize-interval').value = currentConfig.wechat?.window_minimize?.interval || 3600;
+            document.getElementById('restore-delay').value = currentConfig.wechat?.window_minimize?.restore_delay || 1.0;
+            document.getElementById('onebot-enabled').checked = currentConfig.onebot?.enabled || false;
+            document.getElementById('ws-url').value = currentConfig.onebot?.ws_url || '';
+            document.getElementById('access-token').value = currentConfig.onebot?.access_token || '';
+        }
+
+        // 保存配置
+        async function saveConfig() {
+            const config = {
+                webui: { ...currentConfig.webui },
+                wechat: {
+                    ...currentConfig.wechat,
+                    enabled: document.getElementById('wechat-enabled').checked,
+                    check_interval: parseFloat(document.getElementById('check-interval').value),
+                    window_minimize: {
+                        enabled: document.getElementById('window-minimize-enabled').checked,
+                        interval: parseInt(document.getElementById('minimize-interval').value),
+                        restore_delay: parseFloat(document.getElementById('restore-delay').value)
+                    }
+                },
+                onebot: {
+                    ...currentConfig.onebot,
+                    enabled: document.getElementById('onebot-enabled').checked,
+                    ws_url: document.getElementById('ws-url').value.trim(),
+                    access_token: document.getElementById('access-token').value.trim()
+                }
+            };
+
+            try {
+                const result = await api('/api/config', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+
+                if (result.success) {
+                    currentConfig = config;
+                    showToast('配置保存成功', 'success');
+                } else {
+                    showToast('保存失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('保存失败: ' + e.message, 'error');
+            }
+        }
+
+        // 加载用户列表
+        async function loadMonitorUsers() {
+            try {
+                const result = await api('/api/monitor/users');
+                if (result.success) {
+                    updateUsersList(result.data);
+                }
+            } catch (e) {
+                console.error('加载用户失败:', e);
+            }
+        }
+
+        // 更新用户列表
+        function updateUsersList(users) {
+            const list = document.getElementById('users-list');
+            
+            if (!users || users.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>暂无监听用户</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = users.map(user => {
+                const nickname = typeof user === 'string' ? user : user.nickname;
+                const userId = typeof user === 'object' ? user.user_id : '';
+                const initial = nickname.charAt(0).toUpperCase();
+                
+                return `
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-avatar">${initial}</div>
+                            <div>
+                                <div class="user-name">${nickname}</div>
+                                ${userId ? `<div class="user-id">QQ: ${userId}</div>` : ''}
+                            </div>
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="removeMonitorUser('${nickname}')">
+                            <i class="fas fa-trash"></i> 移除
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 添加用户
+        async function addMonitorUser() {
+            const nickname = document.getElementById('new-username').value.trim();
+            const userId = document.getElementById('new-userid').value.trim();
+
+            if (!nickname) {
+                showToast('请输入微信昵称', 'error');
+                return;
+            }
+
+            if (!userId) {
+                showToast('请输入QQ号', 'error');
+                return;
+            }
+
+            try {
+                const result = await api('/api/monitor/users', {
+                    method: 'POST',
+                    body: JSON.stringify({ nickname, user_id: userId })
+                });
+
+                if (result.success) {
+                    document.getElementById('new-username').value = '';
+                    document.getElementById('new-userid').value = '';
+                    await loadMonitorUsers();
+                    showToast(result.message, 'success');
+                } else {
+                    showToast('添加失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('添加失败: ' + e.message, 'error');
+            }
+        }
+
+        // 移除用户
+        async function removeMonitorUser(nickname) {
+            if (!confirm(`确定要移除 "${nickname}" 吗？`)) return;
+
+            try {
+                const result = await api(`/api/monitor/users/${encodeURIComponent(nickname)}`, {
+                    method: 'DELETE'
+                });
+
+                if (result.success) {
+                    await loadMonitorUsers();
+                    showToast(result.message, 'success');
+                } else {
+                    showToast('移除失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('移除失败: ' + e.message, 'error');
+            }
+        }
+
+        // 更新状态
+        async function updateStatus() {
+            try {
+                const result = await api('/api/status');
+                if (result.success) {
+                    const s = result.data;
+                    
+                    // 微信状态
+                    const wechatRunning = s.wechat?.running;
+                    document.getElementById('wechat-badge').className = `status-badge ${wechatRunning ? 'online' : 'offline'}`;
+                    document.getElementById('wechat-badge').textContent = wechatRunning ? '运行中' : '离线';
+                    document.getElementById('wechat-status-text').textContent = wechatRunning ? '运行中' : '已停止';
+                    document.getElementById('wechat-users-count').textContent = s.wechat?.monitor_users?.length || 0;
+
+                    // OneBot状态
+                    const onebotConnected = s.onebot?.connected;
+                    document.getElementById('onebot-badge').className = `status-badge ${onebotConnected ? 'online' : 'offline'}`;
+                    document.getElementById('onebot-badge').textContent = onebotConnected ? '已连接' : '断开';
+                    document.getElementById('onebot-status-text').textContent = onebotConnected ? '已连接' : '未连接';
+                    document.getElementById('onebot-url-display').textContent = s.onebot?.ws_url || '未配置';
+
+                    // 窗口控制器
+                    const windowRunning = s.window_controller?.running;
+                    document.getElementById('window-badge').className = `status-badge ${windowRunning ? 'online' : 'offline'}`;
+                    document.getElementById('window-badge').textContent = windowRunning ? '运行中' : '停止';
+                    document.getElementById('window-status-text').textContent = windowRunning ? '运行中' : '已停止';
+                    document.getElementById('window-count').textContent = s.window_controller?.wechat_windows_count || 0;
+                }
+            } catch (e) {
+                console.error('更新状态失败:', e);
+            }
+        }
+
+        // 控制服务
+        async function controlService(service, action) {
+            try {
+                const result = await api(`/api/control/${service}/${action}`, { method: 'POST' });
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    setTimeout(updateStatus, 1000);
+                } else {
+                    showToast('操作失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('操作失败: ' + e.message, 'error');
+            }
+        }
+
+        // 测试窗口最小化
+        async function testWindowMinimize() {
+            try {
+                const result = await api('/api/window/test-minimize', { method: 'POST' });
+                if (result.success) {
+                    showToast('测试成功', 'success');
+                } else {
+                    showToast('测试失败: ' + result.error, 'error');
+                }
+            } catch (e) {
+                showToast('测试失败: ' + e.message, 'error');
+            }
+        }
+
+        // 刷新日志
+        function refreshLogs() {
+            showToast('日志功能开发中', 'info');
+        }
+
+        // Toast提示
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const icons = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle' };
+            
+            toast.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${message}`;
+            toast.className = `toast ${type}`;
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
 </body>
 </html>
