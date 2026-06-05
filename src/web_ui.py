@@ -5,12 +5,10 @@ Web UI模块
 提供Web界面进行配置管理和状态监控
 """
 
-import json
 import threading
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from pathlib import Path
-import os
 
 class WebUI:
     """Web用户界面"""

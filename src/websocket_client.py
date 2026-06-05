@@ -109,7 +109,7 @@ class WebSocketClient:
         if self.ws:
             try:
                 self.ws.close()
-            except:
+            except Exception:
                 pass
             self.ws = None
             

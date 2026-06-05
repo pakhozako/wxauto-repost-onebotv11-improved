@@ -9,7 +9,6 @@
 import sys
 import time
 import signal
-import asyncio
 from pathlib import Path
 
 # 添加src目录到Python路径

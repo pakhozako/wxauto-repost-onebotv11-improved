@@ -9,7 +9,6 @@ import time
 import threading
 import win32gui
 import win32con
-from typing import Optional, Callable
 
 from logger import logger
 

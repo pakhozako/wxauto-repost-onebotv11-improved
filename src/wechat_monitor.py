@@ -7,9 +7,8 @@
 
 import time
 import threading
-from typing import List, Dict, Any, Optional, Callable
+from typing import List, Dict, Any, Optional
 from pathlib import Path
-import os
 
 from logger import logger
 
@@ -138,7 +137,7 @@ class WeChatMonitor:
         if pythoncom:
             try:
                 pythoncom.CoUninitialize()
-            except:
+            except Exception:
                 pass
             
         self.wechat = None
@@ -229,7 +228,7 @@ class WeChatMonitor:
             if pythoncom:
                 try:
                     pythoncom.CoUninitialize()
-                except:
+                except Exception:
                     pass
                 
     def _setup_listeners(self):
@@ -279,7 +278,7 @@ class WeChatMonitor:
                 return int(message.timestamp)
             else:
                 return int(time.time())
-        except:
+        except Exception:
             return int(time.time())
         
     def _get_user_id_by_nickname(self, nickname: str) -> str:
@@ -328,7 +327,7 @@ class WeChatMonitor:
                 return str(hash(f"{message.content}_{self._get_message_timestamp(message)}"))
             else:
                 return str(hash(f"{str(message)}_{self._get_message_timestamp(message)}"))
-        except:
+        except Exception:
             return str(hash(f"{str(message)}_{int(time.time())}"))
             
     def _process_message(self, username: str, message):
@@ -736,7 +735,7 @@ class WeChatMonitor:
             #     print(f"🚫 匹配到短纯字母消息")
             #     return True
             
-            logger.info(f"✅ 消息通过系统消息过滤")
+            logger.info("✅ 消息通过系统消息过滤")
             return False
             
         except Exception as e:

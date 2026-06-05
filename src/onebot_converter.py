@@ -5,13 +5,11 @@ OneBotV11消息格式转换器
 负责微信消息与OneBotV11协议格式之间的转换
 """
 
-import json
 import time
 import base64
 import hashlib
 from typing import Dict, Any, List, Optional
 from pathlib import Path
-import mimetypes
 
 from logger import logger
 

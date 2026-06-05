@@ -5,12 +5,10 @@
 负责处理从后端接收到的消息并发送给对应的微信用户
 """
 
-import json
 import time
 import threading
 from typing import Dict, Any, List, Optional
 from pathlib import Path
-import base64
 import requests
 from queue import Queue, Empty
 
