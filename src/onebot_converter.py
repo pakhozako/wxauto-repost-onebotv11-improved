@@ -13,15 +13,7 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 import mimetypes
 
-try:
-    from astrbot.api import logger
-except ImportError:
-    # 独立运行模式的简单日志记录器
-    class SimpleLogger:
-        def info(self, msg): print(f"[INFO] {msg}")
-        def error(self, msg): print(f"[ERROR] {msg}")
-        def warning(self, msg): print(f"[WARNING] {msg}")
-    logger = SimpleLogger()
+from logger import logger
 
 class OneBotV11Converter:
     """OneBotV11协议消息转换器"""

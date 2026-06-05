@@ -14,17 +14,7 @@ import base64
 import requests
 from queue import Queue, Empty
 
-# 尝试导入AstrBot日志记录器
-try:
-    from astrbot.api import logger
-except ImportError:
-    # 在独立运行模式下，创建一个简单的日志记录器
-    class SimpleLogger:
-        def info(self, msg): print(f"[INFO] {msg}")
-        def error(self, msg): print(f"[ERROR] {msg}")
-        def warning(self, msg): print(f"[WARNING] {msg}")
-        def debug(self, msg): print(f"[DEBUG] {msg}")
-    logger = SimpleLogger()
+from logger import logger
 
 class MessageHandler:
     """消息回复处理器"""

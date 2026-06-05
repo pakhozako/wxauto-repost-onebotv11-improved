@@ -11,15 +11,7 @@ from typing import List, Dict, Any, Optional, Callable
 from pathlib import Path
 import os
 
-try:
-    from astrbot.api import logger
-except ImportError:
-    # 独立运行模式的简单日志记录器
-    class SimpleLogger:
-        def info(self, msg): print(f"[INFO] {msg}")
-        def error(self, msg): print(f"[ERROR] {msg}")
-        def warning(self, msg): print(f"[WARNING] {msg}")
-    logger = SimpleLogger()
+from logger import logger
 
 try:
     import pythoncom
@@ -39,15 +31,12 @@ class WeChatMonitor:
             config_manager: 配置管理器
         """
         self.config_manager = config_manager
-        self.wechat = None  # 修复：统一使用wechat属性
-        self.is_running = False
+        self.wechat = None
+        self.running = False
         self.monitor_thread = None
         
         # 消息回调函数
         self.message_callback = None
-        
-        # 运行状态
-        self.running = False
         
         # 监听的用户列表
         self.monitored_users = []
@@ -230,7 +219,7 @@ class WeChatMonitor:
             self._setup_listeners()
             
             # 使用回调机制时，只需要保持程序运行
-            while self.is_running:
+            while self.running:
                 time.sleep(1)  # 保持程序运行
                     
         except Exception as e:

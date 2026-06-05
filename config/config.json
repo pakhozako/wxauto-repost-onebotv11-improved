@@ -16,9 +16,9 @@
     }
   },
   "onebot": {
-    "enabled": false,
-    "ws_url": "ws://127.0.0.1:7799/ws",
-    "access_token": "",
+    "enabled": true,
+    "ws_url": "ws://127.0.0.1:9999/ws",
+    "access_token": "917627Abc",
     "reconnect_interval": 5,
     "heartbeat_interval": 30,
     "self_id": "wxauto_bot"

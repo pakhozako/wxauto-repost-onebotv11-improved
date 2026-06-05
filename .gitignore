@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.cache/
+cache/
+wxauto_logs/
+*.db
+*.log
+.env
+config/config.json

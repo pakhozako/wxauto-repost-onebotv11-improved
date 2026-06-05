@@ -11,16 +11,7 @@ import win32gui
 import win32con
 from typing import Optional, Callable
 
-try:
-    from astrbot.api import logger
-except ImportError:
-    # 独立运行模式的简单日志记录器
-    class SimpleLogger:
-        def info(self, msg): print(f"[INFO] {msg}")
-        def error(self, msg): print(f"[ERROR] {msg}")
-        def warning(self, msg): print(f"[WARNING] {msg}")
-        def debug(self, msg): print(f"[DEBUG] {msg}")
-    logger = SimpleLogger()
+from logger import logger
 
 class WindowController:
     """微信窗口控制器"""

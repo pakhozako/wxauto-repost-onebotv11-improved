@@ -23,21 +23,14 @@ from onebot_converter import OneBotV11Converter
 from websocket_client import WebSocketClient
 from message_handler import MessageHandler
 from window_controller import WindowController
+from logger import logger
 
 # AstrBot插件相关导入（如果可用）
 try:
     from astrbot.api.star import Context, Star, register
-    from astrbot.api import logger
     ASTRBOT_AVAILABLE = True
 except ImportError:
     ASTRBOT_AVAILABLE = False
-    # 在独立运行模式下，创建一个简单的日志记录器
-    class SimpleLogger:
-        def info(self, msg): print(f"[INFO] {msg}")
-        def error(self, msg): print(f"[ERROR] {msg}")
-        def warning(self, msg): print(f"[WARNING] {msg}")
-        def debug(self, msg): print(f"[DEBUG] {msg}")
-    logger = SimpleLogger()
 
 class WxAutoOneBotApp:
     """微信消息转发应用主类"""
