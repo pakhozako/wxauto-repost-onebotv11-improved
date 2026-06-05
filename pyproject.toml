@@ -1,6 +1,6 @@
 [project]
 name = "wxauto-repost-onebotv11"
-version = "1.0.0"
+version = "1.3.0"
 description = "消息转发框架 - 基于wxauto和OneBotV11协议"
 readme = "README.md"
 license = {text = "MIT"}
