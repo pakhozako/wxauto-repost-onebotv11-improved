@@ -6,12 +6,23 @@
 """
 
 import json
+import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import threading
 from jsonschema import validate, ValidationError
 
 from logger import logger
+from exceptions import ConfigLoadError, ConfigSaveError
+from constants import (
+    DEFAULT_WEBUI_HOST, DEFAULT_WEBUI_PORT, DEFAULT_WEBUI_DEBUG,
+    DEFAULT_WECHAT_ENABLED, DEFAULT_CHECK_INTERVAL, DEFAULT_AUTO_REPLY,
+    DEFAULT_WINDOW_MINIMIZE_ENABLED, DEFAULT_WINDOW_MINIMIZE_INTERVAL, DEFAULT_WINDOW_RESTORE_DELAY,
+    DEFAULT_ONEBOT_ENABLED, DEFAULT_ONEBOT_WS_URL, DEFAULT_ONEBOT_ACCESS_TOKEN,
+    DEFAULT_ONEBOT_RECONNECT_INTERVAL, DEFAULT_ONEBOT_HEARTBEAT_INTERVAL, DEFAULT_ONEBOT_SELF_ID,
+    DEFAULT_MESSAGE_MAX_LENGTH, DEFAULT_ENABLE_IMAGE, DEFAULT_ENABLE_FILE, DEFAULT_ENABLE_VOICE,
+    MAX_BACKUP_COUNT
+)
 
 class ConfigManager:
     """配置管理器"""
@@ -36,36 +47,36 @@ class ConfigManager:
         # 默认配置
         self.default_config = {
             "webui": {
-                "host": "0.0.0.0",
-                "port": 10001,
-                "debug": False
+                "host": DEFAULT_WEBUI_HOST,
+                "port": DEFAULT_WEBUI_PORT,
+                "debug": DEFAULT_WEBUI_DEBUG
             },
             "wechat": {
-                "enabled": False,
-                "monitor_users": [],  # 监听的用户昵称列表
-                "check_interval": 1.0,  # 检查消息间隔(秒)
-                "auto_reply": False,  # 是否自动回复
+                "enabled": DEFAULT_WECHAT_ENABLED,
+                "monitor_users": [],
+                "check_interval": DEFAULT_CHECK_INTERVAL,
+                "auto_reply": DEFAULT_AUTO_REPLY,
                 "window_minimize": {
-                    "enabled": False,  # 是否启用定时最小化
-                    "interval": 3600,  # 定时间隔(秒)，默认1小时
-                    "restore_delay": 1  # 恢复延迟(秒)，最小化后多久恢复
+                    "enabled": DEFAULT_WINDOW_MINIMIZE_ENABLED,
+                    "interval": DEFAULT_WINDOW_MINIMIZE_INTERVAL,
+                    "restore_delay": DEFAULT_WINDOW_RESTORE_DELAY
                 }
             },
             "onebot": {
-                "enabled": False,
-                "ws_url": "ws://localhost:10001/ws",  # 反向WebSocket地址
-                "access_token": "",  # 访问令牌
-                "reconnect_interval": 5,  # 重连间隔(秒)
-                "heartbeat_interval": 30,  # 心跳间隔(秒)
-                "self_id": "wxauto_bot"  # 机器人ID
+                "enabled": DEFAULT_ONEBOT_ENABLED,
+                "ws_url": DEFAULT_ONEBOT_WS_URL,
+                "access_token": DEFAULT_ONEBOT_ACCESS_TOKEN,
+                "reconnect_interval": DEFAULT_ONEBOT_RECONNECT_INTERVAL,
+                "heartbeat_interval": DEFAULT_ONEBOT_HEARTBEAT_INTERVAL,
+                "self_id": DEFAULT_ONEBOT_SELF_ID
             },
             "message": {
-                "max_length": 4096,  # 最大消息长度
-                "enable_image": True,  # 启用图片消息
-                "enable_file": True,  # 启用文件消息
-                "enable_voice": False,  # 启用语音消息
-                "image_cache_dir": "cache/images",  # 图片缓存目录
-                "file_cache_dir": "cache/files"  # 文件缓存目录
+                "max_length": DEFAULT_MESSAGE_MAX_LENGTH,
+                "enable_image": DEFAULT_ENABLE_IMAGE,
+                "enable_file": DEFAULT_ENABLE_FILE,
+                "enable_voice": DEFAULT_ENABLE_VOICE,
+                "image_cache_dir": "cache/images",
+                "file_cache_dir": "cache/files"
             },
             "logging": {
                 "level": "INFO",
@@ -131,6 +142,9 @@ class ConfigManager:
         
         Returns:
             配置字典
+            
+        Raises:
+            ConfigLoadError: 加载失败时抛出
         """
         with self._lock:
             try:
@@ -147,16 +161,21 @@ class ConfigManager:
                     
                 return self.config_data.copy()
                 
+            except json.JSONDecodeError as e:
+                logger.error(f"配置文件JSON格式错误: {e}")
+                raise ConfigLoadError(f"配置文件JSON格式错误: {e}")
             except Exception as e:
                 logger.error(f"加载配置文件失败: {e}")
-                self.config_data = self.default_config.copy()
-                return self.config_data.copy()
+                raise ConfigLoadError(f"加载配置文件失败: {e}")
                 
     def save_config(self) -> bool:
         """保存配置到文件（自动备份旧配置）
         
         Returns:
             是否保存成功
+            
+        Raises:
+            ConfigSaveError: 保存失败时抛出
         """
         with self._lock:
             try:
@@ -172,12 +191,11 @@ class ConfigManager:
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                     backup_file = backup_dir / f"config_{timestamp}.json"
                     
-                    import shutil
                     shutil.copy2(self.config_file, backup_file)
                     
-                    # 只保留最近5个备份
+                    # 只保留最近N个备份
                     backups = sorted(backup_dir.glob("config_*.json"), reverse=True)
-                    for old_backup in backups[5:]:
+                    for old_backup in backups[MAX_BACKUP_COUNT:]:
                         old_backup.unlink()
                 
                 with open(self.config_file, 'w', encoding='utf-8') as f:
@@ -187,7 +205,7 @@ class ConfigManager:
                 
             except Exception as e:
                 logger.error(f"保存配置文件失败: {e}")
-                return False
+                raise ConfigSaveError(f"保存配置文件失败: {e}")
                 
     def get(self, key: str, default: Any = None) -> Any:
         """获取配置值
@@ -271,6 +289,9 @@ class ConfigManager:
             
         Returns:
             错误消息列表，空列表表示验证通过
+            
+        Raises:
+            ConfigValidationError: 验证失败时抛出
         """
         errors = []
         config_to_validate = config or self.config_data
