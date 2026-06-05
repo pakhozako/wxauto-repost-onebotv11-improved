@@ -8,6 +8,7 @@ Web UI模块
 import threading
 import secrets
 import hashlib
+import time
 from functools import wraps
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
@@ -63,6 +64,7 @@ class WebUI:
         self._setup_routes()
         
         self.running = False
+        self.start_time = time.time()
         
     def _get_template_dir(self):
         """获取模板目录"""
@@ -339,6 +341,15 @@ class WebUI:
                     'success': False,
                     'error': str(e)
                 }), 500
+                
+        @self.app.route('/api/health', methods=['GET'])
+        def health_check():
+            """健康检查端点（无需认证）"""
+            return jsonify({
+                'status': 'ok',
+                'version': '1.0.0',
+                'uptime': int(time.time() - self.start_time) if hasattr(self, 'start_time') else 0
+            })
                 
         @self.app.route('/api/window/test-minimize', methods=['POST'])
         @require_token

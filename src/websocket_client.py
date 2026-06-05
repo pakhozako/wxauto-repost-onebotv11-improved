@@ -344,15 +344,19 @@ class WebSocketClient:
             self._handle_reconnect()
             
     def _handle_reconnect(self):
-        """处理重连"""
+        """处理重连（指数退避策略）"""
         if self.reconnect_attempts >= self.max_reconnect_attempts:
             logger.warning(f"达到最大重连次数({self.max_reconnect_attempts})，停止重连")
             return
             
         self.reconnect_attempts += 1
-        logger.info(f"准备重连 ({self.reconnect_attempts}/{self.max_reconnect_attempts})，{self.reconnect_interval}秒后重试")
         
-        time.sleep(self.reconnect_interval)
+        # 指数退避：基础间隔 * 2^(重试次数-1)，最大60秒
+        backoff = min(self.reconnect_interval * (2 ** (self.reconnect_attempts - 1)), 60)
+        
+        logger.info(f"准备重连 ({self.reconnect_attempts}/{self.max_reconnect_attempts})，{backoff:.1f}秒后重试")
+        
+        time.sleep(backoff)
         
     def _process_send_queue(self):
         """处理发送队列中的消息"""

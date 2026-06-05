@@ -153,7 +153,7 @@ class ConfigManager:
                 return self.config_data.copy()
                 
     def save_config(self) -> bool:
-        """保存配置到文件
+        """保存配置到文件（自动备份旧配置）
         
         Returns:
             是否保存成功
@@ -162,6 +162,23 @@ class ConfigManager:
             try:
                 # 确保配置目录存在
                 self.config_file.parent.mkdir(parents=True, exist_ok=True)
+                
+                # 备份旧配置
+                if self.config_file.exists():
+                    backup_dir = self.config_file.parent / "backups"
+                    backup_dir.mkdir(exist_ok=True)
+                    
+                    from datetime import datetime
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    backup_file = backup_dir / f"config_{timestamp}.json"
+                    
+                    import shutil
+                    shutil.copy2(self.config_file, backup_file)
+                    
+                    # 只保留最近5个备份
+                    backups = sorted(backup_dir.glob("config_*.json"), reverse=True)
+                    for old_backup in backups[5:]:
+                        old_backup.unlink()
                 
                 with open(self.config_file, 'w', encoding='utf-8') as f:
                     json.dump(self.config_data, f, ensure_ascii=False, indent=2)
