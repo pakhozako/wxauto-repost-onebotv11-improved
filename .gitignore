@@ -17,3 +17,11 @@ dist/
 build/
 .pytest_cache/
 .mypy_cache/
+
+.venv/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
