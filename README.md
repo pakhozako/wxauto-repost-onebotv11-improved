@@ -1,51 +1,31 @@
-# WxAuto OneBot V11 Framework
+# 🔄 WxAuto OneBot V11 Framework
 
-基于 wxauto 和 OneBot V11 协议的消息转发框架，支持 WebUI 配置管理。
+> **Language:** [中文](./README.md) | [English](./README_EN.md)
 
-## 运行模式
+> 🚀 **基于 wxauto + OneBot V11 协议的微信消息转发框架**，支持 WebUI 配置管理、反向 WebSocket 通信、多媒体消息处理与窗口定时管理。
 
-- **独立模式**：直接运行 `python main.py`
-- **AstrBot 插件模式**：作为 AstrBot 插件集成使用
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
-## 功能
+---
 
-- WebUI 配置界面（支持深色/浅色主题）
-- 消息监听与协议转换
-- 反向 WebSocket 通信
-- 多媒体消息支持（文字、图片、文件）
-- 窗口定时管理
-- Token 认证与 API 限流
-- 配置 Schema 校验
-- 配置热更新
-- 日志轮转
+## ✨ 核心功能
 
-## 安装
+| 🔧 功能 | 📝 说明 |
+|---------|---------|
+| 🖥️ **WebUI 配置界面** | 支持深色/浅色主题，所有配置通过网页管理 |
+| 📡 **反向 WebSocket** | 与 OneBot V11 兼容端点双向通信 |
+| 💬 **多媒体消息** | 支持文字、图片、文件、语音消息转发 |
+| 🪟 **窗口定时管理** | 自动最小化/恢复微信窗口 |
+| 🔐 **Token 认证** | API 访问令牌 + 请求限流保护 |
+| 🔄 **配置热更新** | 修改配置无需重启，自动检测变更 |
+| 📋 **Schema 校验** | 配置文件结构校验，防止错误配置 |
+| 📊 **日志轮转** | 自动轮转日志文件，防止磁盘占满 |
+| 🐳 **Docker 支持** | 提供 Dockerfile 和 docker-compose.yml |
 
-```bash
-pip install -r requirements.txt
-```
+---
 
-## 使用
-
-```bash
-python main.py
-```
-
-启动后访问 `http://localhost:10001`，首次启动会在日志中显示访问令牌。
-
-## 配置
-
-通过 WebUI 界面进行配置，所有配置保存在 `config/config.json`。
-
-### 主要配置项
-
-| 配置 | 说明 |
-|------|------|
-| 监听用户 | 要监听的用户列表 |
-| WebSocket 地址 | 反向 WS 连接地址 |
-| 窗口管理 | 定时最小化/恢复 |
-
-## 项目结构
+## 🏗️ 项目结构
 
 ```
 ├── main.py                   # 入口
@@ -64,8 +44,8 @@ python main.py
 │   ├── exceptions.py         # 自定义异常
 │   ├── file_handler.py       # 文件处理（图片/文件/语音）
 │   ├── logger.py             # 日志（支持轮转）
-│   ├── message_filter.py     # 消息过滤（系统消息/调试消息）
-│   ├── message_handler.py    # 消息处理（API/回复）
+│   ├── message_filter.py     # 消息过滤
+│   ├── message_handler.py    # 消息处理
 │   ├── message_parser.py     # 消息解析
 │   ├── onebot_converter.py   # OneBot V11 协议转换
 │   ├── web_ui.py             # Web 界面（Flask）
@@ -73,37 +53,63 @@ python main.py
 │   ├── wechat_monitor.py     # 微信消息监听
 │   └── window_controller.py  # 窗口定时管理
 ├── static/                   # 静态资源
-│   └── css/
-│       └── style.css
 ├── tests/                    # 单元测试
-│   ├── test_config_manager.py
-│   ├── test_config_watcher.py
-│   ├── test_constants.py
-│   ├── test_cq_parser.py
-│   ├── test_exceptions.py
-│   ├── test_logger.py
-│   ├── test_logger_advanced.py
-│   ├── test_message_modules.py
-│   ├── test_onebot_converter.py
-│   ├── test_web_ui.py
-│   └── test_websocket.py
 └── cache/                    # 缓存目录
     ├── images/
     ├── files/
     └── voices/
 ```
 
-## 开发
+---
+
+## 🚀 快速开始
+
+### 独立运行
 
 ```bash
-make install     # 安装依赖
-make dev         # 安装开发依赖
-make test        # 运行测试
-make lint        # 代码检查
-make format      # 格式化代码
-make run         # 运行程序
+pip install -r requirements.txt
+python main.py
 ```
 
-## 许可证
+启动后访问 `http://localhost:10001`，首次启动会在日志中显示访问令牌。
 
-MIT License
+### AstrBot 插件模式
+
+作为 AstrBot 插件集成使用，配置后自动启动。
+
+### Docker 部署
+
+```bash
+docker-compose up -d
+```
+
+---
+
+## ⚙️ 配置说明
+
+通过 WebUI 界面进行配置，所有配置保存在 `config/config.json`。
+
+| 🔑 配置项 | 📖 说明 |
+|----------|---------|
+| 监听用户 | 要监听的用户列表 |
+| WebSocket 地址 | 反向 WS 连接地址 |
+| 窗口管理 | 定时最小化/恢复 |
+
+---
+
+## 🛠️ 开发命令
+
+| 📋 命令 | 📖 说明 |
+|---------|---------|
+| `make install` | 安装依赖 |
+| `make dev` | 安装开发依赖 |
+| `make test` | 运行测试 |
+| `make lint` | 代码检查 |
+| `make format` | 格式化代码 |
+| `make run` | 运行程序 |
+
+---
+
+## 📄 许可证
+
+[MIT](LICENSE)
